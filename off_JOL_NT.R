@@ -14,7 +14,10 @@ library(tidyr) # tidyr_1.3.0
 library(psych) # psych_2.3.3 
 library(ggplot2) # ggplot2_3.4.2
 
+library(car) # car_3.1-2
 library(afex) # afex_1.3-0
+library(emmeans) # emmeans_1.8.5
+library(effectsize) # effectsize_0.8.3
 
 # ----------------------------------------------------------------------------#
 # "Study 1: 2x3 Design" ----
@@ -226,7 +229,7 @@ aggregate(confidence ~ time.f * learn.meth.f,
 
 ## Sphericity ----
 # (included in summary(anova), GG correction applied) 
-
+cov(dat_stud[,c("TE01_01","TE03_01","TE05_01","NO01_01","NO03_01","NO05_01")])
 
 # ----------------------------------------------------------------------------#
 # ANOVA ----
@@ -237,6 +240,16 @@ aggregate(confidence ~ time.f * learn.meth.f,
 # descriptive statistics JOL
 describeBy(dat$JOL, 
            list(dat$time.f, dat$learn.meth.f), 
+           mat=TRUE,
+           digits=0)
+
+describeBy(dat$JOL, 
+           list(dat$time.f), 
+           mat=TRUE,
+           digits=0)
+
+describeBy(dat$JOL, 
+           list(dat$learn.meth.f), 
            mat=TRUE,
            digits=0)
 
@@ -277,6 +290,9 @@ omega_squared(
   ci = 0.95,
   verbose = TRUE)
 
+# post tests time.f
+posthoc.JOL.lm <- emmeans(anova.JOL, specs = "time.f") 
+pairs(posthoc.JOL.lm) # all s. 
 
 ## confidence ----
 
@@ -285,6 +301,9 @@ describeBy(dat$confidence,
            list(dat$time.f, dat$learn.meth.f), 
            mat=TRUE,
            digits=0)
+
+mean(dat$confidence)
+sd(dat$confidence)
 
 # confidence NHST ANOVA
 anova.conf <- aov_car(confidence ~ Error(CASE/time.f * learn.meth.f), 
@@ -716,6 +735,16 @@ describeBy(dat$JOL,
            mat=TRUE,
            digits=0)
 
+describeBy(dat$JOL, 
+           dat$time.f, 
+           mat=TRUE,
+           digits=0)
+
+describeBy(dat$JOL, 
+           dat$learn.meth.f, 
+           mat=TRUE,
+           digits=0)
+
 # JOL NHST ANOVA (homoskedasticity violated) 
 anova.JOL <- afex::aov_car(JOL ~ expertise.f + Error(CASE/(time.f * learn.meth.f)), 
                            data = dat, 
@@ -753,6 +782,9 @@ omega_squared(
   ci = 0.95,
   verbose = TRUE)
 
+# post tests time.f
+posthoc.JOL.lm <- emmeans(anova.JOL, specs = "time.f") 
+pairs(posthoc.JOL.lm) # all s. 
 
 ## confidence ----
 
@@ -761,6 +793,8 @@ describeBy(dat$confidence,
            list(dat$time.f, dat$learn.meth.f, dat$expertise.f), 
            mat=TRUE,
            digits=0)
+mean(dat$confidence)
+sd(dat$confidence)
 
 # confidence NHST ANOVA
 anova.conf <- aov_car(confidence ~ expertise.f + Error(CASE/time.f * learn.meth.f), 

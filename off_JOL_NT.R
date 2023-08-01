@@ -225,7 +225,7 @@ aggregate(confidence ~ time.f * learn.meth.f,
           dat,
           function(x) sd(x)) 
 
-## hc3 corrected standard errors for JOL ANOVA needed
+## heteroskedasticity needs to be addressed for JOL Analysis
 
 
 ## Sphericity ----
@@ -342,6 +342,61 @@ omega_squared(
   ci = 0.95,
   verbose = TRUE)
 
+
+## Linear Mixed Model to account for heteroskedasticity and sphericity violation in JOL ANOVA
+library(nlme) # nlme_3.1-162
+
+lmm.JOL.heterosk3.timeonly <- nlme::lme(fixed = JOL ~ time.f, # fixed effect for time
+                                      data = dat,  
+                                      random = ~ 1 + time.f + learn.meth.f | CASE, # random effect for time and learning method, no interaction (for identification)
+                                      weights =  varIdent(~ 1 | time.f), # allows for heteroskedasticity on level 1 predictor time 
+                                      correlation = corSymm(), # account for violation of sphericity (e.g. autocorrelation estimated freely)
+                                      method = "ML",
+                                      control = list(maxIter = 20000, msMaxIter = 10000, msMaxEval = 20000, opt = "nlm",
+                                                     pnlsMaxIter = "1000", niterEM = "1000") # increased iterations and different optimizer for convergence
+)
+
+lmm.JOL.heterosk3.noint <- nlme::lme(fixed = JOL ~ time.f + learn.meth.f,# fixed effect for time and learning method
+                                    data = dat,  
+                                    random = ~ 1 + time.f + learn.meth.f | CASE, # random effect for time and learning method, no interaction (for identification)
+                                    weights =  varIdent(~ 1 | time.f), # allows for heteroskedasticity on level 1 predictor time 
+                                    correlation = corSymm(), # account for violation of sphericity (e.g. autocorrelation estimated freely)
+                                    method = "ML",
+                                    control = list(maxIter = 20000, msMaxIter = 10000, msMaxEval = 20000, opt = "nlm",
+                                                   pnlsMaxIter = "1000", niterEM = "1000") # increased iterations and different optimizer for convergence
+)
+
+lmm.JOL.heterosk3.full <- nlme::lme(fixed = JOL ~ time.f * learn.meth.f, # fixed effect for time and learning method and interaction
+                                   data = dat,  
+                                   random = ~ 1 + time.f + learn.meth.f | CASE, # random effect for time and learning method, no interaction (for identification)
+                                   weights =  varIdent(~ 1 | time.f), # allows for heteroskedasticity on level 1 predictor time 
+                                   correlation = corSymm(), # account for violation of sphericity (e.g. autocorrelation estimated freely)
+                                   method = "ML",
+                                   control = list(maxIter = 20000, msMaxIter = 10000, msMaxEval = 20000, opt = "nlm",
+                                                  pnlsMaxIter = "1000", niterEM = "1000") # increased iterations and different optimizer for convergence
+)
+
+# Likelihood Ratio test for model selection
+anova(lmm.JOL.heterosk3.timeonly, lmm.JOL.heterosk3.noint, lmm.JOL.heterosk3.full)
+# prefers Model with both main effects and no interaction
+summary(lmm.JOL.heterosk3.noint)
+
+# regression diagnostics
+
+# residual plots for each learning method - no more heteroskedasticity
+plot(x = dat$time[dat$learn.meth == 0], y = resid(lmm.JOL.heterosk3.noint, level = 0, type = "response")[dat$learn.meth == 0])
+plot(x = dat$time[dat$learn.meth == 1], y = resid(lmm.JOL.heterosk3.noint, level = 0, type = "response")[dat$learn.meth == 1])
+
+# fitted value plots for each learning method
+plot(x = dat$time[dat$learn.meth == 0], y = fitted(lmm.JOL.heterosk3.noint)[dat$learn.meth == 0])
+plot(x = dat$time[dat$learn.meth == 1], y = fitted(lmm.JOL.heterosk3.noint)[dat$learn.meth == 1])
+
+# residual correlation between time 1 and time 2
+cor(resid(lmm.JOL.heterosk3.noint, level = 0, type = "response")[dat$time.f == 0],
+    resid(lmm.JOL.heterosk3.noint, level = 0, type = "response")[dat$time.f == 1])
+# residual correlation between time 2 and time 3
+cor(resid(lmm.JOL.heterosk3.noint, level = 0, type = "response")[dat$time.f == 1],
+    resid(lmm.JOL.heterosk3.noint, level = 0, type = "response")[dat$time.f == 2]) 
 
 # ----------------------------------------------------------------------------#
 # Plots ----

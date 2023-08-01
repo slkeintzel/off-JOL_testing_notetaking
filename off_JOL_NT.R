@@ -123,7 +123,7 @@ dat_stud <- dat_stud %>%
   select(CASE, contains("TE0"), contains("NO0"))
 
 # Dataframe for JASP use (Bayesian Model Comparisons)
-# write.csv(dat_tot, "JASPdat_students1.csv")
+# write.csv(dat_stud, "JASPdat_students1.csv")
 
 # long format 
 dat_long <- tidyr::pivot_longer(dat_stud, # data frame

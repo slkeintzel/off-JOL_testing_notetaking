@@ -13,6 +13,7 @@ library(dplyr) # dplyr_1.1.2
 library(tidyr) # tidyr_1.3.0 
 library(psych) # psych_2.3.3 
 library(ggplot2) # ggplot2_3.4.2
+library(jtools) # jtools_2.2.2
 
 library(car) # car_3.1-2
 library(afex) # afex_1.3-0
@@ -347,8 +348,6 @@ omega_squared(
 # ----------------------------------------------------------------------------#
 # nice violine plots
 
-library("jtools")
-
 # JOL for Students and Teachers by learning method over time
 plot_JOL <- afex_plot(anova.JOL, x = "time.f", trace = "learn.meth.f",
                       mapping = c("shape", "color"),
@@ -358,7 +357,7 @@ plot_JOL <- afex_plot(anova.JOL, x = "time.f", trace = "learn.meth.f",
                       error = "within",
                       error_ci = T,
                       data_geom = geom_violin) +
-  labs(y = "(offline) Judgement of Learning (%)", x = "time interval")
+  labs(y = "(offline) Judgement of Learning (%)", x = "Time Interval")
 
 plot_JOL + theme_minimal() # or theme_bw()
 plot_JOL + theme_apa() 

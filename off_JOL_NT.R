@@ -157,17 +157,17 @@ dat <- pivot_wider(dat_long,
                    names_from = "AV", 
                    values_from = "value")
 
-# create factor variables
-dat$time.f <- as.factor(dat$time)
-dat$learn.meth.f <- as.factor(dat$learn.meth)
-dat_long$time.f <- as.factor(dat_long$time)
-dat_long$learn.meth.f <- as.factor(dat_long$learn.meth)
-dat$JOL <- as.numeric(dat$JOL)
-dat$confidence <- as.numeric(dat$confidence)
-dat_long$value <- as.numeric(dat_long$value)
+# correct classes for variables
+dat$time.f <- as.factor(dat$time) # 0 = 5 mins, 1 = 1 week, 2 = 2 weeks
+dat$learn.meth.f <- as.factor(dat$learn.meth) # 0 = testing, 1 = note-taking
+dat_long$time.f <- as.factor(dat_long$time) # 0 = 5 mins, 1 = 1 week, 2 = 2 weeks
+dat_long$learn.meth.f <- as.factor(dat_long$learn.meth) # 0 = testing, 1 = note-taking
+dat$JOL <- as.numeric(dat$JOL) # off-JOL variable
+dat$confidence <- as.numeric(dat$confidence) # confidence ratings in off-JOL
+dat_long$value <- as.numeric(dat_long$value) # containing each DVs (AV) value in long format
 
 # ----------------------------------------------------------------------------#
-# check if asumptions for ANOVA are met ----
+# check if assumptions for ANOVA are met ----
 # ----------------------------------------------------------------------------#
 ## Normal distribution ----
 
@@ -205,10 +205,11 @@ shapiro.test(dat_stud$NO04_01) # s
 hist(dat_stud$NO06_01, xlim = c(0,100))
 shapiro.test(dat_stud$NO06_01) # s
 
-## no grave violations considering n = 46
+## no grave violations considering n = 46 in each cell 
 
 
 ## Homoskedacity ----
+# JOL
 leveneTest(value ~ time.f * learn.meth.f, 
            data = dat_long[dat_long$AV == "JOL",], 
            center = median) # s 
@@ -217,6 +218,7 @@ aggregate(JOL ~ time.f * learn.meth.f,
           dat,
           function(x) sd(x)) # increasing variance by time
 
+# confidence in JOL rating
 leveneTest(value ~ time.f * learn.meth.f, 
            data = dat_long[dat_long$AV == "confidence",], 
            center = median) # n.s.
@@ -270,10 +272,10 @@ anova.JOL
 plot(x = fitted(anova.JOL), y = resid(anova.JOL)) 
 
 ### effectsizes ----
-## general eta squared
+## generalized eta squared
 eta_squared(
   anova.JOL,
-  generalized = TRUE,
+  generalized = TRUE, # only manipulated independent variables in this desing
   ci = 0.95,
   verbose = TRUE)
 
@@ -284,7 +286,7 @@ eta_squared(
   ci = 0.95,
   verbose = TRUE)
 
-## omega squared 
+## partial omega squared 
 omega_squared(
   anova.JOL,
   partial = TRUE,
@@ -321,10 +323,10 @@ anova.conf
 plot(x = fitted(anova.conf), y = resid(anova.conf)) 
 
 ### effectsizes ----
-## general eta squared
+## generalized eta squared
 eta_squared(
   anova.conf,
-  generalized = TRUE,
+  generalized = TRUE, # only manipulated independent variables in this design
   ci = 0.95,
   verbose = TRUE)
 
@@ -335,7 +337,7 @@ eta_squared(
   ci = 0.95,
   verbose = TRUE)
 
-## omega squared 
+## partial omega squared 
 omega_squared(
   anova.conf,
   partial = TRUE,
@@ -431,7 +433,6 @@ plot_conf <- afex_plot(anova.conf, x = "time.f", trace = "learn.meth.f",
 plot_conf + theme_minimal() # or theme_bw()
 plot_conf + theme_apa() 
 
-
 # clear environment for next analysis 
 rm(list = ls())
 
@@ -439,9 +440,9 @@ rm(list = ls())
 # "Study 2: 2x3x3 Design" ----
 # ----------------------------------------------------------------------------#
 # Data 
-dat_teach <- read.csv("Dat_teach.csv", # replace by "teachers.csv" 
+dat_teach <- read.csv("Dat_teach.csv", 
                       sep = ";")
-dat_stud <- read.csv("Dat_student_2.csv", # replace by "students2.csv" 
+dat_stud <- read.csv("Dat_student_2.csv",
                       sep = ";") # students rated for a high school student
 
 # ----------------------------------------------------------------------------#
@@ -638,19 +639,19 @@ dat <- pivot_wider(dat_long,
                    names_from = "AV", 
                    values_from = "value")
 
-# create factor variables
-dat$time.f <- as.factor(dat$time)
-dat$learn.meth.f <- as.factor(dat$learn.meth)
-dat$expertise.f <- as.factor(dat$expertise)
-dat_long$time.f <- as.factor(dat_long$time)
-dat_long$learn.meth.f <- as.factor(dat_long$learn.meth)
-dat_long$expertise.f <- as.factor(dat_long$expertise)
-dat$JOL <- as.numeric(dat$JOL)
-dat$confidence <- as.numeric(dat$confidence)
-dat_long$value <- as.numeric(dat_long$value)
+# correct classes for variables
+dat$time.f <- as.factor(dat$time) # 0 = 5 mins, 1 = 1 week, 2 = 2 weeks
+dat$learn.meth.f <- as.factor(dat$learn.meth) # 0 = testing, 1 = note-taking
+dat$expertise.f <- as.factor(dat$expertise) # 0 = students, 1 = teachers
+dat_long$time.f <- as.factor(dat_long$time) # 0 = 5 mins, 1 = 1 week, 2 = 2 weeks
+dat_long$learn.meth.f <- as.factor(dat_long$learn.meth) # 0 = testing, 1 = note-taking
+dat_long$expertise.f <- as.factor(dat_long$expertise) # 0 = students, 1 = teachers
+dat$JOL <- as.numeric(dat$JOL) # off-JOL variable
+dat$confidence <- as.numeric(dat$confidence) # confidence ratings in off-JOL
+dat_long$value <- as.numeric(dat_long$value) # containing each DVs (AV) value in long format
 
 # ----------------------------------------------------------------------------#
-# check if asumptions for ANOVA are met ----
+# check if assumptions for ANOVA are met ----
 # ----------------------------------------------------------------------------#
 ## Normal distribution ----
 
@@ -722,7 +723,7 @@ shapiro.test(dat_stud$NO04_01)
 hist(dat_stud$NO06_01, xlim = c(0,100))
 shapiro.test(dat_stud$NO06_01) 
 
-## overall no grave violations considering n = 46
+## overall no grave violations considering n = 46 in each cell
 
 
 ## Homoskedacity ----
@@ -775,7 +776,7 @@ cov(dat_teach[,c("TE01_01","TE03_01","TE05_01","NO01_01","NO03_01","NO05_01")])
 detach("package:rstatix")
 
 ## not met, but test is also sensitive to violations of the normality assumption
-# + sphericity assumption is not met (see below), correction is applied
+# + sphericity assumption is not met (see below), GG correction applied
 
 # ----------------------------------------------------------------------------#
 # ANOVA ----
@@ -815,10 +816,10 @@ anova.JOL
 plot(x = fitted(anova.JOL), y = resid(anova.JOL)) 
 
 ### effectsizes ----
-## general eta squared
+## generalized eta squared
 eta_squared(
   anova.JOL,
-  generalized = TRUE,
+  generalized = "expertise", # expertise is no manipulated independent variables 
   ci = 0.95,
   verbose = TRUE)
 
@@ -829,7 +830,7 @@ eta_squared(
   ci = 0.95,
   verbose = TRUE)
 
-## omega squared 
+## partial omega squared 
 omega_squared(
   anova.JOL,
   partial = TRUE,
@@ -865,10 +866,10 @@ anova.conf
 plot(x = fitted(anova.conf), y = resid(anova.conf)) 
 
 ### effectsizes ----
-## general eta squared
+## generalized eta squared
 eta_squared(
   anova.conf,
-  generalized = TRUE,
+  generalized = "expertise", # expertise is no manipulated independent variables 
   ci = 0.95,
   verbose = TRUE)
 
@@ -879,7 +880,7 @@ eta_squared(
   ci = 0.95,
   verbose = TRUE)
 
-## omega squared 
+## partial omega squared 
 omega_squared(
   anova.conf,
   partial = TRUE,

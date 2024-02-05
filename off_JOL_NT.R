@@ -231,8 +231,12 @@ aggregate(confidence ~ time.f * learn.meth.f,
 
 
 ## Sphericity ----
-# (included in summary(anova), GG correction applied) 
+# covariance matrix: 
 cov(dat_stud[,c("TE01_01","TE03_01","TE05_01","NO01_01","NO03_01","NO05_01")])
+# correlation matrix: 
+cor(dat_stud[,c("TE01_01","TE03_01","TE05_01","NO01_01","NO03_01","NO05_01")])
+
+## (included in summary(anova), GG correction applied) 
 
 # ----------------------------------------------------------------------------#
 # ANOVA ----
@@ -771,6 +775,9 @@ box_m(box_sub_conf[, -1], box_sub_JOL$expertise) #s
 # Covariance Matrices per expertise
 cov(dat_stud[,c("TE01_01","TE03_01","TE05_01","NO01_01","NO03_01","NO05_01")])
 cov(dat_teach[,c("TE01_01","TE03_01","TE05_01","NO01_01","NO03_01","NO05_01")])
+# Correlation Matrices per expertise
+cor(dat_stud[,c("TE01_01","TE03_01","TE05_01","NO01_01","NO03_01","NO05_01")])
+cor(dat_teach[,c("TE01_01","TE03_01","TE05_01","NO01_01","NO03_01","NO05_01")])
 
 # unload package (interferes with effectsize)
 detach("package:rstatix")

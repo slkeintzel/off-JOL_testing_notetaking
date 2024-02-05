@@ -408,13 +408,13 @@ cor(resid(lmm.JOL.heterosk3.noint, level = 0, type = "response")[dat$time.f == 1
 # JOL for Students and Teachers by learning method over time
 plot_JOL <- afex_plot(anova.JOL, x = "time.f", trace = "learn.meth.f",
                       mapping = c("shape", "color"),
-                      factor_levels = list(time.f = c("5 minutes", "1 week", "2 weeks"),
-                                           learn.meth.f = c("Testing", "Note-taking")),
+                      factor_levels = list(time.f = c("5 Minutes", "1 Week", "2 Weeks"),
+                                           learn.meth.f = c("Testing", "Note-Taking")),
                       legend_title = "Learning method",
                       error = "within",
                       error_ci = T,
                       data_geom = geom_violin) +
-  labs(y = "(offline) Judgement of Learning (%)", x = "Time Interval")
+  labs(y = "Offline Judgement of Learning (%)", x = "Time Interval")
 
 plot_JOL + theme_minimal() # or theme_bw()
 plot_JOL + theme_apa() 
@@ -422,13 +422,13 @@ plot_JOL + theme_apa()
 # confidence for Students and Teachers by learning method over time
 plot_conf <- afex_plot(anova.conf, x = "time.f", trace = "learn.meth.f",
                        mapping = c("shape", "color"),
-                       factor_levels = list(time.f = c("5 minutes", "1 week", "2 weeks"),
-                                            learn.meth.f = c("Testing", "Note-taking")), 
-                       legend_title = "Learning method",
+                       factor_levels = list(time.f = c("5 Ḿinutes", "1 Week", "2 Weeks"),
+                                            learn.meth.f = c("Testing", "Note-Taking")), 
+                       legend_title = "Learning Method",
                        error = "within",
                        error_ci = T,
                        data_geom = geom_violin) +
-  labs(y = "Confidence ratings (%)", x = "time interval")
+  labs(y = "Confidence Ratings (%)", x = "Time Interval")
 
 plot_conf + theme_minimal() # or theme_bw()
 plot_conf + theme_apa() 
@@ -898,14 +898,14 @@ library("jtools")
 # JOL for Students and Teachers by learning method over time
 plot_JOL <- afex_plot(anova.JOL, x = "time.f", trace = "learn.meth.f", panel = "expertise.f",
                       mapping = c("shape", "color"),
-                      factor_levels = list(time.f = c("5 minutes", "1 week", "2 weeks"),
+                      factor_levels = list(time.f = c("5 Minutes", "1 Week", "2 Weeks"),
                                            learn.meth.f = c("Testing", "Note-taking"),
                                            expertise.f = c("Students", "Teachers")), 
-                      legend_title = "Learning method",
+                      legend_title = "Learning Method",
                       error = "model",
                       error_ci = T,
                       data_geom = geom_violin) +
-  labs(y = "(offline) Judgement of Learning (%)", x = "time interval")
+  labs(y = "Offline Judgement of Learning (%)", x = "Time Interval")
 
 plot_JOL + theme_minimal() # or theme_bw()
 plot_JOL + theme_apa() 
@@ -913,14 +913,14 @@ plot_JOL + theme_apa()
 # confidence for Students and Teachers by learning method over time
 plot_conf <- afex_plot(anova.conf, x = "time.f", trace = "learn.meth.f", panel = "expertise.f",
                        mapping = c("shape", "color"),
-                       factor_levels = list(time.f = c("5 minutes", "1 week", "2 weeks"),
+                       factor_levels = list(time.f = c("5 Minutes", "1 Week", "2 Weeks"),
                                             learn.meth.f = c("Testing", "Note-taking"),
                                             expertise.f = c("Students", "Teachers")), 
-                       legend_title = "Learning method",
+                       legend_title = "Learning Method",
                        error = "model",
                        error_ci = T,
                        data_geom = geom_violin) +
-  labs(y = "Confidence ratings (%)", x = "time interval")
+  labs(y = "Confidence Ratings (%)", x = "Time Interval")
 
 plot_conf + theme_minimal() # or theme_bw()
 plot_conf + theme_apa() 

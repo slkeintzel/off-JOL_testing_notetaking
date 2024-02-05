@@ -3,7 +3,8 @@ Project conducted as a seminar project in the masters course cognitive psycholog
 Analysis conducted by slkeintzel, 2021 and 2023
 
 # Skript for Analysis
-`off_JOL_NT.R`
+`off_JOL_NT.R`    
+`JASP R Code.R`
 
 # Data Files
 `Dat_student.csv`: students rated how much they themselves expect to remember (https://osf.io/9by38)  

@@ -409,7 +409,7 @@ cor(resid(lmm.JOL.heterosk3.noint, level = 0, type = "response")[dat$time.f == 1
 # ----------------------------------------------------------------------------#
 # nice violine plots
 
-# JOL for Students and Teachers by learning method over time
+# JOL for Students by learning method over time
 plot_JOL <- afex_plot(anova.JOL, x = "time.f", trace = "learn.meth.f",
                       mapping = c("shape", "color"),
                       factor_levels = list(time.f = c("5 Minutes", "1 Week", "2 Weeks"),
@@ -423,7 +423,7 @@ plot_JOL <- afex_plot(anova.JOL, x = "time.f", trace = "learn.meth.f",
 plot_JOL + theme_minimal() # or theme_bw()
 plot_JOL + theme_apa() 
 
-# confidence for Students and Teachers by learning method over time
+# confidence for Students by learning method over time
 plot_conf <- afex_plot(anova.conf, x = "time.f", trace = "learn.meth.f",
                        mapping = c("shape", "color"),
                        factor_levels = list(time.f = c("5 Ḿinutes", "1 Week", "2 Weeks"),
@@ -809,7 +809,7 @@ describeBy(dat$JOL,
 
 # JOL NHST ANOVA (homoskedasticity violated) 
 anova.JOL <- afex::aov_car(JOL ~ expertise.f + Error(CASE/(time.f * learn.meth.f)), 
-                           data = dat, 
+                           data = dat,
                            type = 3) 
 summary(anova.JOL) # includes sphericity test
 
